@@ -1,15 +1,14 @@
-import { retrieveLaunchParams, SDKProvider } from '@tma.js/sdk-solid';
 import { ErrorBoundary, Switch, Match } from 'solid-js';
 
 import { App } from '@/components/App.jsx';
 import { TonConnectUIProvider } from '@/tonconnect/TonConnectUIProvider.jsx';
+import { getWebApp } from '@/utils/getWebApp.js';
 
 /**
- * @returns {Node | JSX.ArrayElement | string | number | boolean}
+ * @returns {import('solid-js').JSXElement}
  */
 function Inner() {
-  const debug = retrieveLaunchParams().startParam === 'debug';
-  if (debug) {
+  if (getWebApp().initDataUnsafe.start_param === 'debug') {
     import('eruda').then((lib) => lib.default.init());
   }
 
@@ -17,15 +16,13 @@ function Inner() {
     <TonConnectUIProvider
       manifestUrl={new URL('tonconnect-manifest.json', window.location.href).toString()}
     >
-      <SDKProvider acceptCustomStyles={true} debug={debug}>
-        <App/>
-      </SDKProvider>
+      <App/>
     </TonConnectUIProvider>
   );
-};
+}
 
 /**
- * @returns {Node | JSX.ArrayElement | string | number | boolean}
+ * @returns {import('solid-js').JSXElement}
  */
 export function Root() {
   return (
@@ -55,4 +52,4 @@ export function Root() {
       <Inner/>
     </ErrorBoundary>
   );
-};
+}

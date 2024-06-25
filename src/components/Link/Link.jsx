@@ -1,5 +1,6 @@
 import { A } from '@solidjs/router';
-import { classNames, useUtils } from '@tma.js/sdk-solid';
+
+import { getWebApp } from '@/utils/getWebApp.js';
 
 import './Link.css';
 
@@ -8,8 +9,6 @@ import './Link.css';
  * @return {import('solid-js').JSXElement}
  */
 export function Link(props) {
-  const utils = useUtils();
-
   /**
    * @param {MouseEvent} e
    */
@@ -23,7 +22,7 @@ export function Link(props) {
 
     if (isExternal) {
       e.preventDefault();
-      return utils().openLink(targetUrl.toString());
+      getWebApp().openLink(targetUrl.toString());
     }
   };
 
@@ -31,7 +30,7 @@ export function Link(props) {
     <A
       {...props}
       onClick={onClick}
-      class={classNames(props.class, 'link')}
+      class={[props.class, 'link'].filter(Boolean).join(' ')}
     />
   );
 }

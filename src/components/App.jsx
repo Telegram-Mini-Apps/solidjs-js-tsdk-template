@@ -1,54 +1,52 @@
-import { Navigate, Route } from '@solidjs/router';
 import {
-  initNavigator,
-  bindMiniAppCSSVars,
-  bindThemeParamsCSSVars,
-  bindViewportCSSVars,
-  useMiniApp,
-  useThemeParams,
-  useViewport,
-} from '@tma.js/sdk-solid';
-import { createRouter } from '@tma.js/solid-router-integration';
+  Navigate,
+  Route,
+  HashRouter,
+  useNavigate,
+} from '@solidjs/router';
 import { createEffect, For, onCleanup } from 'solid-js';
 
 import { routes } from '@/navigation/routes.jsx';
+import { getWebApp } from '@/utils/getWebApp.js';
 
 /**
- * @returns {Node | JSX.ArrayElement | string | number | boolean}
+ * @param {import('@solidjs/router').RouteSectionProps} props
+ * @returns {import('solid-js').JSXElement}
+ * @constructor
  */
-export function App() {
-  const miniApp = useMiniApp();
-  const themeParams = useThemeParams();
-  const viewport = useViewport();
+function HashRouterRoot(props) {
+  const navigate = useNavigate();
+  const bb = getWebApp().BackButton;
 
   createEffect(() => {
-    onCleanup(bindMiniAppCSSVars(miniApp(), themeParams()));
-  });
-  createEffect(() => {
-    onCleanup(bindThemeParamsCSSVars(themeParams()));
-  });
-  createEffect(() => {
-    const vp = viewport();
-    vp && onCleanup(bindViewportCSSVars(vp));
+    if (props.location.pathname === '/') {
+      bb.isVisible && bb.hide();
+    } else {
+      !bb.isVisible && bb.show();
+    }
   });
 
-  // Create new application navigator and attach it to the browser history, so it could modify
-  // it and listen to its changes.
-  const navigator = initNavigator('app-navigator-state');
-  void navigator.attach();
+  function back() {
+    navigate(-1);
+  }
 
+  bb.onClick(back);
   onCleanup(() => {
-    navigator.detach();
+    bb.offClick(back);
   });
 
-  const Router = createRouter(navigator);
+  return <>{props.children}</>
+}
 
+export function App() {
   return (
-    <Router>
-      <For each={routes}>
-        {(route) => <Route path={route.path} component={route.Component}/>}
-      </For>
-      <Route path='*' component={() => <Navigate href='/'/>}/>
-    </Router>
+    <HashRouter root={HashRouterRoot}>
+      <Route path="/">
+        <For each={routes}>
+          {(route) => <Route path={route.path} component={route.Component}/>}
+        </For>
+      </Route>
+      <Route path="*" component={() => <Navigate href="/"/>}/>
+    </HashRouter>
   );
 }

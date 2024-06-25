@@ -1,12 +1,9 @@
-import { useThemeParams } from '@tma.js/sdk-solid';
-
 import { DisplayData } from '@/components/DisplayData/DisplayData.jsx';
 import { Link } from '@/components/Link/Link.jsx';
 import { Page } from '@/components/Page/Page.jsx';
+import { getWebApp } from '@/utils/getWebApp.js';
 
 export function ThemeParamsPage() {
-  const themeParams = useThemeParams();
-
   return (
     <Page
       title="Theme Params"
@@ -24,13 +21,8 @@ export function ThemeParamsPage() {
       <DisplayData
         rows={
           Object
-            .entries(themeParams().getState())
-            .map(([title, value]) => ({
-              title: title
-                .replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`)
-                .replace(/background/, 'bg'),
-              value,
-            }))
+            .entries(getWebApp().themeParams)
+            .map(([title, value]) => ({ title, value }))
         }
       />
     </Page>

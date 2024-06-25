@@ -1,24 +1,24 @@
-# Telegram Mini Apps Solid.js Boilerplate
+# Telegram Mini Apps Solid.js Template
 
-This boilerplate demonstrates how developers can implement a single-page application on the Telegram
-Mini Apps platform using the following technologies:
+This template demonstrates how developers can implement a single-page application on the Telegram
+Mini Apps platform using the following technologies and libraries:
 
-- [Solid.js](https://www.solidjs.com/)
-- [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
+- [Solid](https://solidjs.com/)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- [@tma.js SDK](https://docs.telegram-mini-apps.com/packages/tma-js-sdk)
+- [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
+- [Telegram SDK](https://core.telegram.org/bots/webapps#initializing-mini-apps)
 - [Vite](https://vitejs.dev/)
 
 > This boilerplate was created using [pnpm](https://pnpm.io/). Therefore, it is required to use
 > it for this project as well.
 
-## First Start
+## Install Dependencies
 
 If you have just cloned this template, you should install the project dependencies using the
 command:
 
 ```Bash
-pnpm i
+pnpm install
 ```
 
 ## Scripts
@@ -38,56 +38,113 @@ pnpm run {script}
 # Example: pnpm run build
 ```
 
-## Running
+## Create Bot and Mini App
 
-The first important thing to note here is that the application should always be launched in the
-context of Telegram application. You can't just run the application and open it directly in your
-browser via `http://localhost:3000`. Opening application this way will surely lead to errors, as long
-as this environment does not provide the required Telegram Mini Apps functionality.
+Before you start, make sure you have already created a Telegram Bot. Here is
+a [comprehensive guide](https://docs.telegram-mini-apps.com/platform/creating-new-app) on how to
+do it.
 
-Telegram Mini Apps environment could be any specified
-in the [documentation](https://docs.telegram-mini-apps.com/platform/about#supported-applications).
+## Run
 
-So, before starting the application, make sure you have already created it in the Telegram
-system. Here is the [guide](https://docs.telegram-mini-apps.com/platform/creating-new-app) how to do it.
+Although Mini Apps are designed to be opened
+within [Telegram applications](https://docs.telegram-mini-apps.com/platform/about#supported-applications),
+you can still develop and test them outside of Telegram during the development process.
 
-When application is created successfully, run it using the `dev` script and open inside Telegram:
+To run the application in the development mode, use the `dev` script:
 
-```Bash
-pnpm run dev
+```bash
+npm run dev
 ```
 
-## Deploying
+After this, you will see a similar message in your terminal:
 
-This boilerplate uses GitHub Pages as the way to host the application externally. GitHub Pages provides a CDN
-which will let your users receive the application rapidly. Alternatively, you could use such services
-as [Heroku](https://www.heroku.com/) or [Vercel](https://vercel.com).
+```bash
+VITE ready in 275 ms
 
-### GitHub Workflow
+➜  Local:   http://localhost:5173/solidjs-js-tsdk-template
+➜  press h + enter to show help
+```
 
-To simplify the process of deployment, this boilerplate contains already
-written [GitHub workflow](.github/workflows/github-pages-deploy.yml) to deploy the project automatically in case, some
-content was pushed to the `master` branch.
+To view the application, you need to open the `Local`
+link (`http://localhost:5173/solidjs-js-tsdk-template` in this example) in your browser.
 
-To let this workflow work properly, it is required create a new environment (or edit the existing one) in the GitHub
-repository Settings with the name `github-pages`. Then, add the `master` branch to the list of deployment branches.
+### Run Inside Telegram
 
-Environments settings could be find using this URL: `https://github.com/{username}/{repository}/settings/environments`
+Although it is possible to run the application outside of Telegram, it is recommended to develop it
+within Telegram for the most accurate representation of its real-world functionality.
 
-![img.png](.github/deployment-branches.png)
+To run the application inside Telegram, [@BotFather](https://t.me/botfather) requires an HTTPS link.
 
-In case, you don't want to do it automatically, or you don't use GitHub as the project codebase, just remove the
-`.github` directory.
+This template already provides a solution.
 
-### GitHub Web Interface
+Navigate to the `vite.config.js` file and uncomment the usage of the `basicSsl` function. This
+function utilizes
+the [@vitejs/plugin-basic-ssl](https://www.npmjs.com/package/@vitejs/plugin-basic-ssl) plugin, which
+enables the creation of an HTTPS link. Note that this plugin generates a self-signed certificate,
+which browsers will recognize as unsafe, resulting in a warning when accessing the app.
 
-Alternatively, developers are able to configure the automatic deployment using GitHub web interface. To use it,
-follow the link: `https://github.com/{username}/{repository}/settings/pages`.
+After uncommenting the function, run the `dev` script again and observe the output in your terminal:
+
+```bash
+VITE ready in 331 ms
+
+➜  Local:   https://localhost:5173/solidjs-js-tsdk-template
+➜  press h + enter to show help
+```
+
+Visiting the `Local` link (`https://localhost:5173/solidjs-js-tsdk-template` in this example) in your
+browser, you will see the following warning:
+
+![SSL Warning](assets/ssl-warning.png)
+
+This browser warning is normal and can be safely ignored as long as the site is secure. Click
+the `Proceed to localhost (unsafe)` button to continue and view the application.
+
+Once the application is displayed correctly, submit this link as the Mini App link
+to [@BotFather](https://t.me/botfather). Then, navigate
+to [https://web.telegram.org/k/](https://web.telegram.org/k/), find your bot, and launch the
+Telegram Mini App. This approach provides the full development experience.
+
+### Expose Dev Server
+
+Sometimes, you might want to view the application on other devices.
+
+To expose your development server to local network devices, go to the `vite.config.js` file and
+uncomment the line defining the `host` option.
+
+Alternatively, you can achieve this by running the command `vite --host`.
+
+Here is an example of the output you will see:
+
+```bash
+VITE v5.2.12  ready in 257 ms
+
+➜  Local:   https://localhost:5173/solidjs-js-tsdk-template
+➜  Network: https://172.27.224.1:5173/solidjs-js-tsdk-template
+➜  Network: https://172.19.32.1:5173/solidjs-js-tsdk-template
+➜  Network: https://192.168.0.171:5173/solidjs-js-tsdk-template
+```
+
+All `Network` links listed here are accessible to devices on the same network. Using these links,
+those devices will be able to view the application.
+
+> **Important**
+>
+> Because we are using self-signed SSL certificates, the Android and iOS Telegram applications will
+> not be able to display the application. These operating systems enforce stricter security
+> measures, preventing the Mini App from loading. To address this issue, refer
+> to [this guide](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
+
+## Deploy
+
+This boilerplate uses GitHub Pages as the way to host the application externally. GitHub Pages
+provides a CDN which will let your users receive the application rapidly. Alternatively, you could
+use such services as [Heroku](https://www.heroku.com/) or [Vercel](https://vercel.com).
 
 ### Manual Deployment
 
-This boilerplate uses the [gh-pages](https://www.npmjs.com/package/gh-pages) tool, which allows deploying your
-application right from your PC.
+This boilerplate uses the [gh-pages](https://www.npmjs.com/package/gh-pages) tool, which allows
+deploying your application right from your PC.
 
 #### Configuring
 
@@ -95,7 +152,7 @@ Before running the deployment process, ensure that you have done the following:
 
 1. Replaced the `homepage` value in `package.json`. The GitHub Pages deploy tool uses this value to
    determine the related GitHub project.
-2. Replaced the `base` value in `vite.config.ts` and have set it to the name of your GitHub
+2. Replaced the `base` value in `vite.config.js` and have set it to the name of your GitHub
    repository. Vite will use this value when creating paths to static assets.
 
 For instance, if your GitHub username is `telegram-mini-apps` and the repository name
@@ -103,16 +160,16 @@ is `is-awesome`, the value in the `homepage` field should be the following:
 
 ```json
 {
-    "homepage": "https://telegram-mini-apps.github.io/is-awesome"
+  "homepage": "https://telegram-mini-apps.github.io/is-awesome"
 }
 ```
 
-And `vite.config.ts` should have this content:
+And `vite.config.js` should have this content:
 
 ```ts
 export default defineConfig({
-    base: '/is-awesome/',
-    // ...
+  base: '/is-awesome/',
+  // ...
 });
 ```
 
@@ -125,31 +182,53 @@ Before deploying the application, make sure that you've built it and going to de
 static files:
 
 ```bash
-pnpm run build
+npm run build
 ```
 
 Then, run the deployment process, using the `deploy` script:
 
 ```Bash
-pnpm run deploy
+npm run deploy
 ```
 
 After the deployment completed successfully, visit the page with data according to your
 username and repository name. Here is the page link example using the data mentioned above:
 https://telegram-mini-apps.github.io/is-awesome
 
+### GitHub Workflow
+
+To simplify the deployment process, this template includes a
+pre-configured [GitHub workflow](.github/workflows/github-pages-deploy.yml) that automatically
+deploys the project when changes are pushed to the `master` branch.
+
+To enable this workflow, create a new environment (or edit the existing one) in the GitHub
+repository settings and name it `github-pages`. Then, add the `master` branch to the list of
+deployment branches.
+
+You can find the environment settings using this
+URL: `https://github.com/{username}/{repository}/settings/environments`.
+
+![img.png](.github/deployment-branches.png)
+
+In case, you don't want to do it automatically, or you don't use GitHub as the project codebase,
+remove the `.github` directory.
+
+### GitHub Web Interface
+
+Alternatively, developers can configure automatic deployment using the GitHub web interface. To do
+this, follow the link: `https://github.com/{username}/{repository}/settings/pages`.
+
 ## TON Connect
 
-This boilerplate uses the [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
-project to showcase how developers could integrate TON cryptocurrency-related functionality.
+This boilerplate utilizes the [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
+project to demonstrate how developers can integrate functionality related to TON cryptocurrency.
 
-The TON Connect manifest used in this boilerplate is located in the `public` folder along with all
-publicly available static files. Don't forget
+The TON Connect manifest used in this boilerplate is stored in the `public` folder, where all
+publicly accessible static files are located. Remember
 to [configure](https://docs.ton.org/develop/dapps/ton-connect/manifest) this file according to your
-project information.
+project's information.
 
 ## Useful Links
 
 - [Platform documentation](https://docs.telegram-mini-apps.com/)
-- [@tma.js/sdk-solid documentation](https://docs.telegram-mini-apps.com/packages/tma-js-sdk-solid)
 - [Telegram developers community chat](https://t.me/devs)

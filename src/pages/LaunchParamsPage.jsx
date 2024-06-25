@@ -1,11 +1,10 @@
-import { retrieveLaunchParams } from '@tma.js/sdk-solid';
-
 import { DisplayData } from '@/components/DisplayData/DisplayData.jsx';
 import { Link } from '@/components/Link/Link.jsx';
 import { Page } from '@/components/Page/Page.jsx';
+import { getWebApp } from '@/utils/getWebApp.js';
 
 export function LaunchParamsPage() {
-  const lp = retrieveLaunchParams();
+  const webApp = getWebApp();
 
   return (
     <Page
@@ -23,11 +22,9 @@ export function LaunchParamsPage() {
     >
       <DisplayData
         rows={[
-          { title: 'tgWebAppPlatform', value: lp.platform },
-          { title: 'tgWebAppShowSettings', value: lp.showSettings },
-          { title: 'tgWebAppVersion', value: lp.version },
-          { title: 'tgWebAppBotInline', value: lp.botInline },
-          { title: 'tgWebAppStartParam', value: lp.showSettings },
+          { title: 'tgWebAppPlatform', value: webApp.platform },
+          { title: 'tgWebAppVersion', value: webApp.version },
+          { title: 'tgWebAppStartParam', value: webApp.initDataUnsafe.start_param },
           { title: 'tgWebAppData', value: <Link href="/init-data">View</Link> },
           { title: 'tgWebAppThemeParams', value: <Link href="/theme-params">View</Link> },
         ]}

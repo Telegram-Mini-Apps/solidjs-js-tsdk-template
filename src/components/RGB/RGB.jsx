@@ -1,12 +1,10 @@
-import { classNames } from '@tma.js/sdk-solid';
 import { splitProps } from 'solid-js';
 
 import './RGB.css';
 
 /**
- * @typedef RGBProps
- * @extends {import('solid-js').JSX.IntrinsicElements['span']}
- * @property {import('@tma.js/sdk-solid').RGB} color
+ * @typedef {import('solid-js').JSX.IntrinsicElements['span']} RGBProps
+ * @property {string} color
  */
 
 /**
@@ -15,9 +13,12 @@ import './RGB.css';
  */
 export function RGB(props) {
   return (
-    <span {...splitProps(props, ['class'])[0]} class={classNames('rgb', props.class)}>
-      <i class="rgb__icon" style={{ 'background-color': props.color }}/>
-        {props.color}
-    </span>
+    <span
+      {...splitProps(props, ['class'])[0]}
+      class={['rgb', props.class].filter(Boolean).join(' ')}
+    >
+    <i class="rgb__icon" style={{ 'background-color': props.color }}/>
+      {props.color}
+  </span>
   );
 }

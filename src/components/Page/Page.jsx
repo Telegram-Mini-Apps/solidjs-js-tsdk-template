@@ -2,7 +2,7 @@ import './Page.css';
 
 /**
  * @typedef PageProps
- * @property {String} title
+ * @property {string} title
  * @property {import('solid-js').JSXElement} [disclaimer]
  * @property {import('solid-js').JSXElement} [children]
  */
